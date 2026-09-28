@@ -1,60 +1,47 @@
-# E-Commerce Customer Intelligence & Sales Forecasting
+# E-Commerce Customer Intelligence and Sales Forecasting
 
-This project analyses customer behaviour, purchasing patterns, and segmentation data to understand revenue drivers in an e-commerce environment and develop machine learning models for sales forecasting.
+Personal project: can customer-behaviour data explain and forecast e-commerce sales, and do customers fall into meaningful segments?
 
-By integrating behavioural analytics, unsupervised customer segmentation, and time-series predictive modelling, the project demonstrates how data-driven insights can support targeted marketing strategies, improve customer retention, and optimise revenue growth.
+## Data
 
-## 🎯 Project Objectives
+Three public datasets: customer behaviour, customer segmentation (1,000 customers) and daily sales transactions, cleaned and integrated in `notebooks/01–04`.
 
-- Analyse customer purchasing behaviour and engagement patterns  
-- Segment customers into meaningful behavioural personas using clustering  
-- Identify key factors influencing sales performance  
-- Quantify revenue contribution by customer segment  
-- Build predictive models to forecast future sales trends  
+## Method
 
-## 📊 Key Components
+1. **Segmentation:** K-Means, hierarchical clustering and DBSCAN on standardised customer features; compared with silhouette and Davies–Bouldin scores.
+2. **Sales forecasting:** lag features, rolling statistics and seasonality encodings; linear regression, random forest and XGBoost evaluated on a held-out test set.
 
-### 1. Customer Behaviour Analysis  
-Exploration of purchase frequency, basket size, spending trends, and engagement metrics to understand how customers interact with the platform.
+## Results
 
-### 2. Customer Segmentation  
-Application of unsupervised machine learning (K-Means clustering) to identify distinct customer groups such as loyal shoppers, high-value occasional buyers, newly engaged customers, and disengaged high-income segments.
+**Segmentation**
 
-### 3. Sales Performance Analysis  
-Time-series analysis of daily transactions, revenue trends, seasonality, and promotional effects.
+| Method | Clusters | Silhouette | Davies–Bouldin |
+|---|---|---|---|
+| K-Means (selected) | 4 | 0.154 | 1.75 |
+| Hierarchical | 4 | 0.134 | 1.79 |
+| DBSCAN | 15 (898 noise points) | 0.369 | — |
 
-### 4. Revenue Contribution & Insights  
-Linking customer segments to total revenue to highlight high-impact groups and growth opportunities.
+K-Means produced interpretable profiles (e.g. a small premium segment, frequent value seekers, mid-tier moderate spenders), but low silhouette scores mean the segments overlap heavily. DBSCAN's higher score comes from labelling most customers as noise, so it was not used.
 
-### 5. Sales Forecasting  
-Feature engineering with lag variables, rolling statistics, and seasonality encoding followed by predictive modelling using Linear Regression, Random Forest, and XGBoost.
+**Sales forecasting (test set)**
 
+| Model | MAE | RMSE | R² | MAPE |
+|---|---|---|---|---|
+| Random forest | 10,311 | 12,209 | 0.03 | 4.8% |
+| XGBoost | 10,467 | 12,554 | −0.03 | 4.9% |
+| Linear regression | 12,358 | 15,648 | −0.60 | 5.9% |
 
-## 🛠 Tools & Technologies
+## Takeaway
 
-- Python (Pandas, NumPy, Matplotlib, Seaborn)  
-- Scikit-learn  
-- XGBoost  
-- Time-Series Feature Engineering  
-- Unsupervised Machine Learning (Clustering)  
+This is largely a **negative result**: engineered lag and seasonality features explained almost none of the day-to-day variation in sales (R² ≈ 0), and the customer segments are weakly separated. A low MAPE here reflects a stable sales level, not predictive skill. Useful next steps would be exogenous drivers (promotions, pricing, traffic) and a naive seasonal baseline to benchmark against.
 
+## Repository
 
-## 📈 Business Impact
+```
+data/        raw and cleaned datasets
+notebooks/   01–03 EDA, 04 integration, 05 sales prediction model
+models/      best_sales_model.pkl
+results/     notes on outputs (tables above)
+```
 
-This project demonstrates how e-commerce businesses can:
-
-- Identify high-value and at-risk customer segments  
-- Optimise marketing and retention strategies  
-- Anticipate revenue fluctuations  
-- Make proactive, data-driven business decisions  
-
-
-## 🚀 Future Enhancements
-
-- Interactive dashboard 
-- Real-time sales forecasting pipeline  
-- Customer lifetime value (CLV) prediction  
-- Campaign impact simulation  
-
-
-
+Tools: Python, pandas, scikit-learn, XGBoost, Matplotlib, Seaborn.
