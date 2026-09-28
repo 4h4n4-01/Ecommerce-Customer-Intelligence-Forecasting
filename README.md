@@ -19,7 +19,7 @@ Three public datasets: customer behaviour, customer segmentation (1,000 customer
 |---|---|---|---|
 | K-Means (selected) | 4 | 0.154 | 1.75 |
 | Hierarchical | 4 | 0.134 | 1.79 |
-| DBSCAN | 15 (898 noise points) | 0.369 | — |
+| DBSCAN | 15 (898 noise points) | 0.369 | n/a |
 
 K-Means produced interpretable profiles (e.g. a small premium segment, frequent value seekers, mid-tier moderate spenders), but low silhouette scores mean the segments overlap heavily. DBSCAN's higher score comes from labelling most customers as noise, so it was not used.
 
